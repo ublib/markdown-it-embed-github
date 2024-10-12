@@ -8,6 +8,12 @@ export interface Options {
 
   /** @default ["javascript", "typescript"] */
   languages?: string[];
+
+  /** @default true */
+  cache?: boolean;
+
+  /** @default "./markdown-it-github.cache.json" */
+  cacheFilePath?: string;
 }
 
 type Plugin = (options?: Options) => PluginSimple;
