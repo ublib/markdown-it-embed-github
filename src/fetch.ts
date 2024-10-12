@@ -1,28 +1,31 @@
+import type { Options } from ".";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname } from "node:path";
 import { XMLHttpRequest } from "xmlhttprequest";
 
-const __dirname = dirname(new URL(import.meta.url).pathname);
-const CACHE_FILE = resolve(
-  __dirname,
-  "markdown-it-github.cache.json",
-);
+const DEFAULT_CACHE_FILE = "./markdown-it-github.cache.json";
 
 /** url(string) - content(string) */
 type Cache = Record<string, string>;
-const cache: Cache = JSON.parse(
-  (() => {
-    try {
-      mkdirSync(dirname(CACHE_FILE), { recursive: true });
-      return readFileSync(CACHE_FILE, "utf-8");
-    }
-    catch {
-      return "{}";
-    }
-  })(),
-);
+let cache: Cache;
 
-export function fetchHtmlSync(url: string): string {
+export function fetchHtmlSync(url: string, options?: Options): string {
+  const cacheFilePath = options?.cacheFilePath ?? DEFAULT_CACHE_FILE;
+
+  if (!cache) {
+    cache = JSON.parse(
+      (() => {
+        try {
+          mkdirSync(dirname(cacheFilePath), { recursive: true });
+          return readFileSync(cacheFilePath, "utf-8");
+        }
+        catch {
+          return "{}";
+        }
+      })(),
+    );
+  }
+
   const c = cache[url];
   if (c) {
     return c;
@@ -34,6 +37,6 @@ export function fetchHtmlSync(url: string): string {
 
   const res = xhr.responseText;
   cache[url] = res;
-  writeFileSync(CACHE_FILE, JSON.stringify(cache));
+  writeFileSync(cacheFilePath, JSON.stringify(cache));
   return xhr.responseText;
 }

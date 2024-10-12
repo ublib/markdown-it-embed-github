@@ -31,7 +31,7 @@ export function createRule(options: Options | undefined, md: MarkdownIt): void {
 
   md.renderer.rules.github_link = (tokens, idx) => {
     const c = tokens[idx].content;
-    const rawHtml = fetchHtmlSync(c);
+    const rawHtml = fetchHtmlSync(c, options);
     const parsed = parse(rawHtml, c);
     const res = (options?.renderer ? options.renderer : renderToHtml)(parsed);
     return res;
