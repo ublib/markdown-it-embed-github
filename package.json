@@ -21,7 +21,6 @@
     "@antfu/eslint-config": "^3.7.3",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.7.5",
-    "@types/xmlhttprequest": "^1.8.2",
     "eslint": "^9.11.1",
     "highlight.js": "^11.10.0",
     "markdown-it": "^14.1.0",

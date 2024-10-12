@@ -3,7 +3,7 @@
     "composite": true,
     "target": "es2016",
     "jsx": "preserve",
-    "lib": ["es2016", "DOM"],
+    "lib": ["es2016"],
     "useDefineForClassFields": false,
     "experimentalDecorators": true,
     "baseUrl": ".",
