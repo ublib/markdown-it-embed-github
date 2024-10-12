@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-// import { XMLHttpRequest as X } from "xmlhttprequest";
+import { XMLHttpRequest } from "xmlhttprequest";
 
 const __dirname = dirname(new URL(import.meta.url).pathname);
 const CACHE_FILE = resolve(
