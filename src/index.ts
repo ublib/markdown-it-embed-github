@@ -1,11 +1,40 @@
 import type { PluginSimple } from "markdown-it";
 
+import type { GitHubSourceDescriptor } from "./parse";
 import { fetchHtmlSync } from "./fetch";
 import { parse } from "./parse";
 import { renderToHtml } from "./render";
 import { isGithubUrl } from "./utils";
 
-const previewGitHubSource: PluginSimple = (md) => {
+export interface Options {
+  renderer?: (descriptor: GitHubSourceDescriptor) => string;
+
+  /** @default ["javascript", "typescript"] */
+  languages?: string[];
+}
+
+type Plugin = (options?: Options) => PluginSimple;
+
+/**
+ * @examples
+ *
+ * basic usage:
+ * ```ts
+ * import markdownIt from "markdown-it";
+ * markdownIt.use(previewGitHubSource());
+ * ```
+ *
+ * with options:
+ * ```ts
+ * import markdownIt from "markdown-it";
+ * markdownIt.use(
+ *   previewGitHubSource({
+ *     renderer: (descriptor) => `<div>${descriptor.filename}</div>`
+ *   })
+ * );
+ * ```
+ */
+const previewGitHubSource: Plugin = options => (md) => {
   md.block.ruler.before(
     "paragraph",
     "github_link_block",
@@ -32,7 +61,7 @@ const previewGitHubSource: PluginSimple = (md) => {
     const c = tokens[idx].content;
     const rawHtml = fetchHtmlSync(c);
     const parsed = parse(rawHtml, c);
-    const res = renderToHtml(parsed);
+    const res = (options?.renderer ? options.renderer : renderToHtml)(parsed);
     return res;
   };
 };
